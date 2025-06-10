@@ -1,5 +1,5 @@
 import random
-from Molecule import Molecule
+from src.ljts.Molecule import Molecule
 
 class Box:
 

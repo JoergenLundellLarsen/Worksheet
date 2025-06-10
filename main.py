@@ -1,4 +1,4 @@
-from boks import Box
+from src.ljts.boks import Box
 
 def main():
     length_x = 5
