@@ -130,7 +130,7 @@ class Box:
         old_x, old_y, old_z = mol._x, mol._y, mol._z
 
         # Calculate energy before the move
-        old_energy = self._energy_of_molecule(i)
+        old_energy = self.compute_potential_energy()
 
         # Make a trial move (add random displacement in each direction)
         mol._x = (mol._x + random.uniform(-b, b)) % self._lx
@@ -138,7 +138,7 @@ class Box:
         mol._z = (mol._z + random.uniform(-b, b)) % self._lz
 
         # Calculate energy after the move
-        new_energy = self._energy_of_molecule(i)
+        new_energy = self.compute_potential_energy()
 
         delta_E = new_energy - old_energy
 
@@ -150,33 +150,4 @@ class Box:
             mol._x, mol._y, mol._z = old_x, old_y, old_z
             return False
 
-    def _energy_of_molecule(self, idx):
-        """
-        Calculate the energy of one molecule (idx) with all other molecules in the box..
-        """
-        cutoff = 2.5
-        cutoff_squared = cutoff ** 2
-        shift_value = 0.01631689
-
-        mol_i = self._molecules[idx]
-        energy = 0.0
-        for j, mol_j in enumerate(self._molecules):
-            if j == idx:
-                continue
-            dx = mol_i._x - mol_j._x
-            dy = mol_i._y - mol_j._y
-            dz = mol_i._z - mol_j._z
-
-            # Apply periodic boundary conditions (minimum image)
-            dx -= round(dx / self._lx) * self._lx
-            dy -= round(dy / self._ly) * self._ly
-            dz -= round(dz / self._lz) * self._lz
-
-            r_squared = dx * dx + dy * dy + dz * dz
-
-            if r_squared < cutoff_squared and r_squared > 1e-12:
-                inv_r2 = 1.0 / r_squared
-                inv_r6 = inv_r2 ** 3
-                inv_r12 = inv_r6 ** 2
-                energy += 4 * (inv_r12 - inv_r6) + shift_value
-        return energy
+   
