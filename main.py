@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+
 from src.ljts.boks import Box
 
 def main():
@@ -22,14 +22,7 @@ def main():
     energy_history = [initial_energy]
     accept_total = 0
 
-    # --- Live plot setup ---
-    plt.ion()
-    fig, ax = plt.subplots()
-    line, = ax.plot(energy_history)
-    ax.set_xlabel("Sweep")
-    ax.set_ylabel("Potensiell energi")
-    ax.set_title("Live plot av potensiell energi")
-    ax.set_ylim(-1000,5000)
+
 
     for sweep in range(1, sweeps+1):
         accept = box.mc_sweep(b, T)
@@ -38,15 +31,7 @@ def main():
             curr_energy = box.compute_potential_energy()
             energy_history.append(curr_energy)
             print(f"Sweep {sweep}: Pot.energy = {curr_energy:.6f}")
-            # --- Live plot update ---
-            line.set_data(range(len(energy_history)), energy_history)
-            ax.relim()
-            ax.autoscale_view()
-            plt.draw()
-            plt.pause(0.01)
-
-    plt.ioff()
-    plt.show()
+        
 
     accept_rate = accept_total / (sweeps * N)
     print(f"\nAcceptance ratio: {accept_rate:.3f}")
